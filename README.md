@@ -99,14 +99,18 @@ add_filter('upload_mimes', function ($types) {
 - The frontend uses the official Rive runtime from the CDN and vanilla JS (no build step required).
 
 ## GitHub push & conflict resolution
-If your branch conflicts with GitHub and you need to push from this environment:
+If your branch conflicts with GitHub and you need to pull/merge the latest remote changes:
 1. Add the remote if it is missing: `git remote add origin <URL_DU_DEPOT>`.
 2. Fetch the latest changes: `git fetch origin`.
-3. Rebase or merge the target branch (e.g., `main`) to resolve conflicts locally:
-   - Rebase: `git rebase origin/main`
-   - Merge: `git merge origin/main`
-4. Fix any merge conflicts in the files, then continue the rebase (`git rebase --continue`) or commit the merge.
+3. Merge or rebase the remote branch into your working branch (example with `origin/main` → `work`):
+   ```bash
+   git checkout work
+   git merge origin/main   # or: git rebase origin/main
+   ```
+4. Resolve conflicts in the reported files, then continue the operation:
+   - Rebase: `git status` → fix conflicts → `git add <files>` → `git rebase --continue`.
+   - Merge: `git status` → fix conflicts → `git add <files>` → `git commit` (merge commit message).
 5. Push with upstream tracking if first push: `git push -u origin work` (replace `work` with your branch name).
-6. If the remote was updated after your rebase/merge, repeat fetch/rebase before pushing again.
+6. If the remote moves again before you push, repeat steps 2–4 to stay up to date.
 
-This repository currently has no `origin` remote configured; set it to your GitHub URL before pushing.
+This repository currently has **no `origin` remote configured**, so you must set it to your GitHub URL before fetching or merging the latest changes. Until a valid remote is configured, we cannot pull or merge anything from GitHub.
