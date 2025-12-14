@@ -97,3 +97,16 @@ add_filter('upload_mimes', function ($types) {
 - Assets are loaded only on pages where the shortcode appears.
 - Multiple `[rive_player]` instances on the same page are supported; each keeps isolated configuration.
 - The frontend uses the official Rive runtime from the CDN and vanilla JS (no build step required).
+
+## GitHub push & conflict resolution
+If your branch conflicts with GitHub and you need to push from this environment:
+1. Add the remote if it is missing: `git remote add origin <URL_DU_DEPOT>`.
+2. Fetch the latest changes: `git fetch origin`.
+3. Rebase or merge the target branch (e.g., `main`) to resolve conflicts locally:
+   - Rebase: `git rebase origin/main`
+   - Merge: `git merge origin/main`
+4. Fix any merge conflicts in the files, then continue the rebase (`git rebase --continue`) or commit the merge.
+5. Push with upstream tracking if first push: `git push -u origin work` (replace `work` with your branch name).
+6. If the remote was updated after your rebase/merge, repeat fetch/rebase before pushing again.
+
+This repository currently has no `origin` remote configured; set it to your GitHub URL before pushing.
