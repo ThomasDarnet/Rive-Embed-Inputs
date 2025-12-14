@@ -76,8 +76,8 @@ class TheFunction_Rive_Plugin
             'fit' => 'contain',
             'alignment' => 'center',
             'autoplay' => 'true',
-            'artboard' => 'Skull',
-            'statemachine' => 'State Machine 1',
+            'artboard' => '',
+            'statemachine' => '',
             'animations' => '',
             'inputs' => '',
             'pointer' => 'true',
@@ -95,7 +95,7 @@ class TheFunction_Rive_Plugin
             return '';
         }
 
-        $id = sanitize_html_class(wp_unique_id('tfrive-'));
+        $id = uniqid('tfrive-', true);
         $container_id = $id . '-container';
         $canvas_id = $id . '-canvas';
 
@@ -175,8 +175,9 @@ class TheFunction_Rive_Plugin
             return;
         }
 
-        $inline = 'window.thefunctionRiveConfigs = ' . $json . ';';
-        wp_add_inline_script('thefunction-rive-player', $inline, 'before');
+        echo '<script type="text/javascript">';
+        echo 'window.thefunctionRiveConfigs = ' . $json . ';';
+        echo '</script>';
     }
 
     /**

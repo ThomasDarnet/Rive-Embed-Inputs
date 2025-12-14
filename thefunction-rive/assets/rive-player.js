@@ -33,13 +33,6 @@
     }
   }
 
-  function logWarn(debug, ...args) {
-    if (debug) {
-      // eslint-disable-next-line no-console
-      console.warn('[Rive]', ...args);
-    }
-  }
-
   class AudioBridge {
     constructor(config, setLevel, setTalking, debug) {
       this.config = config || {};
@@ -232,34 +225,7 @@
 
       this.syncCanvasSize();
       this.observeResize();
-      logDebug(this.debug, 'Loaded Rive file', {
-        src: this.config.src,
-        artboard: this.config.artboard,
-        stateMachine: this.config.stateMachine,
-        animations: this.config.animations,
-      });
-
-      const hasStateMachine = this.captureInputs();
-      const hasAnimations = Array.isArray(this.config.animations)
-        ? this.config.animations.length > 0
-        : false;
-
-      if (!hasStateMachine && hasAnimations) {
-        logWarn(
-          this.debug,
-          'State machine missing or invalid; falling back to animations',
-          this.config.animations
-        );
-        this.rive.play(this.config.animations);
-      }
-
-      if (!hasStateMachine && !hasAnimations) {
-        this.showFallback(
-          'Aucune state machine ou animation valide fournie pour cette instance.'
-        );
-        return;
-      }
-
+      this.captureInputs();
       this.attachPointer();
       this.attachFocus();
       this.attachThinking();
@@ -268,7 +234,7 @@
       if (this.loadTimeout) {
         clearTimeout(this.loadTimeout);
       }
-      logDebug(this.debug, 'Runtime ready', {
+      logDebug(this.debug, 'Rive loaded', {
         artboard: this.config.artboard,
         stateMachine: this.config.stateMachine,
         animations: this.config.animations,
@@ -278,40 +244,13 @@
 
     captureInputs() {
       if (!this.rive || !this.config.stateMachine) {
-        if (!this.config.stateMachine) {
-          logWarn(this.debug, 'No state machine provided; relying on animations');
-        }
-        return false;
+        return;
       }
 
       const inputs = this.rive.stateMachineInputs(this.config.stateMachine) || [];
       inputs.forEach((input) => {
         this.inputs[input.name] = input;
       });
-
-      if (!inputs.length) {
-        const hasAnimations = Array.isArray(this.config.animations)
-          ? this.config.animations.length > 0
-          : false;
-        logWarn(
-          this.debug,
-          `State machine "${this.config.stateMachine}" introuvable ou sans inputs.`
-        );
-        if (!hasAnimations) {
-          this.showFallback(
-            `State machine "${this.config.stateMachine}" introuvable ou sans inputs.`
-          );
-        }
-        return false;
-      }
-
-      logDebug(
-        this.debug,
-        'Inputs detected',
-        inputs.map((input) => `${input.name} (${input.type})`)
-      );
-
-      return true;
     }
 
     attachPointer() {
@@ -490,16 +429,9 @@
       this.resizeObserver.observe(this.container);
     }
 
-    showFallback(message) {
+    showFallback() {
       if (this.container) {
         this.container.classList.add('thefunction-rive-error');
-      }
-
-      if (message) {
-        const fallback = this.container?.querySelector('.thefunction-rive-fallback');
-        if (fallback) {
-          fallback.textContent = message;
-        }
       }
     }
   }

@@ -20,8 +20,8 @@ Common attributes (all optional unless noted):
 - `fit`: `contain|cover|fill|fitWidth|fitHeight|none` (maps to `rive.Fit`).
 - `alignment`: `center|topLeft|topRight|bottomLeft|bottomRight`.
 - `autoplay`: `true|false` (default `true`).
-- `artboard`: Artboard name (default `Skull`).
-- `stateMachine`: State machine name (default `State Machine 1`).
+- `artboard`: Artboard name.
+- `stateMachine`: State machine name.
 - `animations`: Comma list of animation names when no state machine is used.
 - `pointer`: Enable pointer mapping (`true|false`, default `true`).
 - `pointerScope`: `window|canvas|container` (default `window`).
@@ -52,12 +52,6 @@ Mapping behaviors:
 - **Audio**: when `audio` is enabled, RMS level drives `level`; boolean `talking` toggles above `threshold`.
 - **Triggers**: `click` fires a trigger input on click/tap.
 
-When `debug="true"`, the console logs:
-- the `.riv` URL, artboard, and chosen state machine / animations,
-- the detected inputs and their types,
-- warnings if a state machine is missing or has no inputs (the plugin will fall back to animations when provided),
-- any audio connection issues.
-
 ### Additional examples
 - Minimal autoplay:
   ```text
@@ -80,7 +74,6 @@ When `debug="true"`, the console logs:
 ## Troubleshooting
 - **Nothing renders**: confirm the `src` URL is correct and publicly accessible. Check browser console for network errors.
 - **Inputs not responding**: verify `stateMachine` matches the file, and the mapped input names (e.g., `mx`, `my`) exist in the state machine.
-- **State machine missing**: if the configured state machine is not found, the plugin logs a warning (when `debug=true`) and falls back to listed `animations` when possible. Provide at least one valid animation name or update the state machine name.
 - **Audio denied**: microphones require a user gesture; click/tap the canvas to activate if prompted. If permission is denied, the animation continues without audio.
 - **Fallback visible**: the plugin shows the fallback message if Rive cannot load within ~8 seconds. Inspect the console for details when `debug=true`.
 
@@ -97,20 +90,3 @@ add_filter('upload_mimes', function ($types) {
 - Assets are loaded only on pages where the shortcode appears.
 - Multiple `[rive_player]` instances on the same page are supported; each keeps isolated configuration.
 - The frontend uses the official Rive runtime from the CDN and vanilla JS (no build step required).
-
-## GitHub push & conflict resolution
-If your branch conflicts with GitHub and you need to pull/merge the latest remote changes:
-1. Add the remote if it is missing: `git remote add origin <URL_DU_DEPOT>`.
-2. Fetch the latest changes: `git fetch origin`.
-3. Merge or rebase the remote branch into your working branch (example with `origin/main` → `work`):
-   ```bash
-   git checkout work
-   git merge origin/main   # or: git rebase origin/main
-   ```
-4. Resolve conflicts in the reported files, then continue the operation:
-   - Rebase: `git status` → fix conflicts → `git add <files>` → `git rebase --continue`.
-   - Merge: `git status` → fix conflicts → `git add <files>` → `git commit` (merge commit message).
-5. Push with upstream tracking if first push: `git push -u origin work` (replace `work` with your branch name).
-6. If the remote moves again before you push, repeat steps 2–4 to stay up to date.
-
-This repository currently has **no `origin` remote configured**, so you must set it to your GitHub URL before fetching or merging the latest changes. Until a valid remote is configured, we cannot pull or merge anything from GitHub.
